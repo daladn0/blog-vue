@@ -5,6 +5,17 @@ const routes = [
     path: "/",
     name: "home",
     component: import("@/views/HomePage.vue"),
+    meta: {
+      layout: "MainLayout",
+    },
+  },
+  {
+    path: "/login",
+    name: "login",
+    component: import("@/views/LoginPage.vue"),
+    meta: {
+      layout: "EmptyLayout",
+    },
   },
 ];
 

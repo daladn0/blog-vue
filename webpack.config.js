@@ -1,6 +1,7 @@
 "use strict";
 const { VueLoaderPlugin } = require("vue-loader");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const SpriteLoaderPlugin = require("svg-sprite-loader/plugin");
 const path = require("path");
 
 module.exports = {
@@ -8,7 +9,8 @@ module.exports = {
   entry: ["./src/main.js"],
   output: {
     path: path.resolve(__dirname, "dist"),
-    filename: "main.js",
+    filename: "[name].[chunkhash].js",
+    publicPath: "/",
   },
   devServer: {
     hot: true,
@@ -44,15 +46,22 @@ module.exports = {
         test: /\.js$/,
         use: "babel-loader",
       },
+      {
+        test: /\.(svg)(\?.*)?$/,
+        loader: "svg-sprite-loader",
+        options: {
+          extract: true,
+          spriteFilename: "./sprite.svg",
+        },
+      },
     ],
   },
   plugins: [
     new VueLoaderPlugin(),
     new HtmlWebpackPlugin({
-      filename: path.resolve(__dirname, "public", "index.html"),
       template: path.resolve(__dirname, "public", "index.html"),
       favicon: path.resolve(__dirname, "public", "favicon.ico"),
-      inject: true,
     }),
+    new SpriteLoaderPlugin({ plainSprite: true }),
   ],
 };
