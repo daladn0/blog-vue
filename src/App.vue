@@ -1,23 +1,44 @@
 <template>
-  <component :is="`${layout}`">
-    <router-view />
-  </component>
+  <div class="relative min-h-screen">
+    <component :is="`${layout}`">
+      <router-view />
+    </component>
+    <div class="absolute left-4 bottom-4 space-y-4 w-full max-w-xs">
+      <transition-group name="list">
+        <AppToast
+          class="w-full"
+          v-for="toast in stack"
+          @close="deleteFromStackById(toast.id)"
+          :key="toast.id"
+          :message="toast.message"
+          :type="toast.type"
+        />
+      </transition-group>
+    </div>
+  </div>
 </template>
 <script>
-import MainLayout from "@/layouts/MainLayout.vue";
+import { mapGetters, mapMutations } from "vuex";
+import AppToast from "@/components/common/AppToast.vue";
 import EmptyLayout from "@/layouts/EmptyLayout.vue";
+import MainLayout from "@/layouts/MainLayout.vue";
 export default {
   name: "App.vue",
   components: {
     MainLayout,
     EmptyLayout,
+    AppToast,
   },
   computed: {
+    ...mapGetters("toasts", ["stack"]),
     layout() {
       return this.$route.meta.layout === "MainLayout"
         ? "MainLayout"
         : "EmptyLayout";
     },
+  },
+  methods: {
+    ...mapMutations("toasts", ["deleteFromStackById"]),
   },
 };
 </script>

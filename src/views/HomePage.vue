@@ -1,5 +1,5 @@
 <template>
-  <div>Home</div>
+  <div><button @click="push">add</button></div>
 </template>
 <script>
 export default {

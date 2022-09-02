@@ -59,6 +59,12 @@ export const signupFormFields = [
   },
 ];
 
+export const TOAST_TYPES = {
+  SUCCESS: "SUCCESS",
+  WARNING: "WARNING",
+  ERROR: "ERROR",
+};
+
 export default {
   FULLNAME_MIN_LENGTH: 3,
   FULLNAME_MAX_LENGTH: 24,

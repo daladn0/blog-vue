@@ -13,7 +13,7 @@
 <script>
 import { mapActions } from "vuex";
 import AuthForm from "@/components/common/AppForm.vue";
-import { loginFormFields } from "@/constants";
+import { loginFormFields, TOAST_TYPES } from "@/constants";
 export default {
   name: "LoginPage",
   components: {
@@ -28,6 +28,7 @@ export default {
   },
   methods: {
     ...mapActions("user", ["login"]),
+    ...mapActions("toasts", ["addNew"]),
     async onFormSubmit(model) {
       this.isLoading = true;
       const { response, error, errorMessage } = await this.$withAsync(
@@ -43,6 +44,10 @@ export default {
         this.login(user);
         localStorage.setItem("token", tokens.accessToken);
         this.$router.push({ name: "home" });
+        this.addNew({
+          message: "You are now logged in",
+          type: TOAST_TYPES.SUCCESS,
+        });
       }
 
       if (error) {
