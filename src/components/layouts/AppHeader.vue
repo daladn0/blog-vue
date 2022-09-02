@@ -1,6 +1,6 @@
 <template>
   <nav
-    class="shadow bg-white border-gray-200 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-900"
+    class="shadow bg-white border-gray-200 px-2 sm:px-4 py-2.5 dark:bg-gray-900"
   >
     <div class="container flex justify-between items-center mx-auto">
       <router-link :to="{ name: 'home' }" class="flex items-center">

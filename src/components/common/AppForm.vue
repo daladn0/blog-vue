@@ -54,16 +54,17 @@
     </Field>
 
     <span
-      v-if="false"
+      v-if="errorMessage"
       class="text-sm text-red-500 font-medium text-center block"
-      >Invalid credentials</span
+      >{{ errorMessage }}</span
     >
 
     <button
       type="submit"
       class="block w-full bg-indigo-600 py-2 rounded-2xl hover:bg-indigo-700 hover:-translate-y-1 transition-all duration-500 text-white font-semibold mb-2"
     >
-      Login
+      <span v-if="!isLoading">Login</span>
+      <LoadingSpinner v-else class="w-6 h-6 mx-auto" />
     </button>
     <slot name="footer">
       <div class="flex items-center justify-center">
@@ -90,6 +91,7 @@ configure({
 
 export default {
   name: "AuthForm",
+  emits: ["submitted"],
   components: {
     Form,
     Field,
@@ -101,10 +103,17 @@ export default {
     fields: {
       type: Array,
     },
+    isLoading: {
+      type: Boolean,
+      default: false,
+    },
+    errorMessage: {
+      type: String,
+    },
   },
   methods: {
-    onFormSubmit(e) {
-      console.log(e);
+    onFormSubmit(model) {
+      this.$emit("submitted", model);
     },
     onInvalidSubmit({ errors }) {
       const firstError = Object.keys(errors)[0];
@@ -113,12 +122,14 @@ export default {
 
       if (input[0] && input[0].focus) input[0].focus();
     },
+    focusFirstInput() {
+      const firstField = this.$refs[this.fields[0]?.name];
+
+      if (firstField[0] && firstField[0].focus) firstField[0].focus();
+    },
   },
   mounted() {
-    // focusing a first input
-    const firstField = this.$refs[this.fields[0]?.name];
-
-    if (firstField[0] && firstField[0].focus) firstField[0].focus();
+    this.focusFirstInput();
   },
 };
 </script>
