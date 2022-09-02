@@ -14,6 +14,7 @@ module.exports = {
   },
   devServer: {
     hot: true,
+    historyApiFallback: true,
   },
   watchOptions: {
     poll: true,

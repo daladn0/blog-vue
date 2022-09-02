@@ -1,10 +1,12 @@
 import { createRouter, createWebHistory } from "vue-router";
+import HomePage from "@/views/HomePage.vue";
+import LoginPage from "@/views/Auth/LoginPage.vue";
 
 const routes = [
   {
     path: "/",
     name: "home",
-    component: import("@/views/HomePage.vue"),
+    component: HomePage,
     meta: {
       layout: "MainLayout",
     },
@@ -12,7 +14,15 @@ const routes = [
   {
     path: "/login",
     name: "login",
-    component: import("@/views/LoginPage.vue"),
+    component: LoginPage,
+    meta: {
+      layout: "EmptyLayout",
+    },
+  },
+  {
+    path: "/signup",
+    name: "signup",
+    component: () => import("@/views/Auth/SignupPage.vue"),
     meta: {
       layout: "EmptyLayout",
     },
