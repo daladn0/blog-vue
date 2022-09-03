@@ -3,7 +3,7 @@
     class="z-10 w-56 bg-white rounded shadow border after:block after:absolute after:w-4 after:h-4 after:bg-white after:border-t after:border-l after:border-gray-300 after:right-4 after:bottom-full after:rotate-45 after:-mb-2 after:rounded"
   >
     <slot name="header" />
-    <ul class="text-sm text-gray-700 dark:text-gray-200">
+    <ul class="text-sm text-gray-700 dark:text-gray-200 relative z-10">
       <li
         v-for="item in items"
         :key="item.emit"

@@ -12,6 +12,14 @@ const routes = [
     },
   },
   {
+    path: "/post/:id",
+    name: "post",
+    component: () => import("@/views/SinglePost.vue"),
+    meta: {
+      layout: "MainLayout",
+    },
+  },
+  {
     path: "/login",
     name: "login",
     component: LoginPage,

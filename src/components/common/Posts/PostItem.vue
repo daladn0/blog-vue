@@ -38,7 +38,7 @@
       </div>
     </div>
     <router-link
-      :to="{ name: 'home' }"
+      :to="{ name: 'post', params: { id: post._id } }"
       class="group w-full aspect-ratio overflow-hidden block"
     >
       <img
@@ -51,7 +51,7 @@
       <h2
         class="mb-2 md:mb-3 text-xl md:text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white line-clamp-2"
       >
-        <router-link :to="{ name: 'home' }">
+        <router-link :to="{ name: 'post', params: { id: post._id } }">
           {{ post.title }}
         </router-link>
       </h2>
@@ -62,14 +62,15 @@
         {{ post.body }}
       </p>
       <div class="flex items-center justify-between">
-        <button
+        <router-link
+          :to="{ name: 'post', params: { id: post._id } }"
           class="flex-shrink-0 text-sm md:text-base transition-all inline-flex items-center font-medium text-blue-600 hover:text-blue-800 dark:text-blue-500 dark:hover:text-blue-700"
         >
           Learn more
           <svg class="ml-1 w-4 md:w-6 h-4 md:h-6">
             <use v-svg-icon="'arrow-right'" />
           </svg>
-        </button>
+        </router-link>
 
         <div class="hidden sm:flex items-center truncate pl-8">
           <ul v-if="post.categories" class="flex items-center space-x-4">
@@ -79,7 +80,7 @@
             >
               <router-link
                 class="text-gray-400 text-sm hover:underline"
-                :to="{ name: 'home' }"
+                :to="{ name: 'post', params: { id: post._id } }"
               >
                 {{ category.title }}
               </router-link>
@@ -97,6 +98,7 @@
 </template>
 <script>
 import { formatDate } from "@/helpers/formats.js";
+import { clickOutside } from "@/helpers/events.js";
 import AppDropdown from "@/components/common/AppDropdown.vue";
 export default {
   components: { AppDropdown },
@@ -121,17 +123,12 @@ export default {
   methods: {
     formatDate,
     onWindowClick(e) {
-      const target = e.target;
-
-      if (
-        target.id === "post-dots" ||
-        target.id === "post-dropdown" ||
-        target.closest("#post-dots") ||
-        target.closest("#post-dropdown")
-      )
-        return;
-
-      this.dropdownVisible = false;
+      clickOutside(
+        e,
+        "#post-dots",
+        "#post-dropdown",
+        () => (this.dropdownVisible = false)
+      );
     },
   },
   mounted() {

@@ -76,6 +76,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+import { clickOutside } from "@/helpers/events.js";
 import AppDropdown from "@/components/common/AppDropdown.vue";
 export default {
   name: "AppHeader",
@@ -104,17 +105,12 @@ export default {
   },
   methods: {
     onWindowClick(e) {
-      const target = e.target;
-
-      if (
-        target.id === "profile" ||
-        target.id === "dropdown" ||
-        target.closest("#profile") ||
-        target.closest("#dropdown")
-      )
-        return;
-
-      this.dropdownVisible = false;
+      clickOutside(
+        e,
+        "#profile",
+        "#dropdown",
+        () => (this.dropdownVisible = false)
+      );
     },
   },
   mounted() {
