@@ -1,5 +1,7 @@
 <template>
-  <div class="bg-white rounded-lg dark:bg-gray-800 overflow-hidden">
+  <div
+    class="bg-white border shadow-md rounded-lg dark:bg-gray-800 overflow-hidden"
+  >
     <div class="flex items-center justify-between p-3 border-b">
       <div class="flex items-center max-w-[80%] truncate">
         <img
@@ -8,7 +10,7 @@
           :alt="post?.author?.fullName"
         />
         <div class="flex flex-col truncate">
-          <span class="text-gray-800 text-xs font-medium truncate">{{
+          <span class="text-gray-800 text-sm font-medium truncate">{{
             post?.author?.fullName
           }}</span>
           <span class="text-xs text-gray-500 truncate">
@@ -42,7 +44,7 @@
       class="group w-full aspect-ratio overflow-hidden block"
     >
       <img
-        class="w-full h-full object-cover duration-300 ease-linear group-hover:scale-105"
+        class="w-full h-full object-cover duration-200 ease-in group-hover:scale-105"
         src="https://www.militarytimes.com/resizer/yNKY50ee_dI8_rEbZVxM0By5jgY=/1024x0/filters:format(jpg):quality(70)/cloudfront-us-east-1.images.arcpublishing.com/archetype/WGWZBKY4HRG2DBKXSQC57HSPQY.jpg"
         alt="USMC fighter"
       />

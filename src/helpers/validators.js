@@ -52,3 +52,15 @@ export function validateConfirmPassword(value, { form }) {
 
   return true;
 }
+
+export function validateTitle(value) {
+  if (!value) return "Title is required";
+
+  if (value.length < constants.POST_TITLE_MIN_LENGTH)
+    return `Title should have at least ${constants.POST_TITLE_MIN_LENGTH} chars`;
+
+  if (value.length > constants.POST_TITLE_MAX_LENGTH)
+    return `Title can\`t be longer then ${constants.POST_TITLE_MAX_LENGTH} chars`;
+
+  return true;
+}

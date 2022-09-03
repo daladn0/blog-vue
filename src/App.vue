@@ -3,7 +3,7 @@
     <component :is="`${layout}`">
       <router-view />
     </component>
-    <div class="absolute left-4 bottom-4 space-y-4 w-full max-w-xs">
+    <div class="fixed left-4 bottom-4 space-y-4 w-full max-w-xs">
       <transition-group name="list">
         <AppToast
           class="w-full"

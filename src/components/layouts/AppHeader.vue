@@ -48,9 +48,10 @@
         <transition name="slide-down">
           <AppDropdown
             v-if="dropdownVisible"
-            id="dropdown"
             :items="dropList"
+            id="dropdown"
             class="absolute right-0 top-full mt-6"
+            @logout="onLogout"
           >
             <template #header>
               <div class="flex items-center max-w-full p-3">
@@ -75,7 +76,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import { clickOutside } from "@/helpers/events.js";
 import AppDropdown from "@/components/common/AppDropdown.vue";
 export default {
@@ -104,6 +105,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions("user", ["logout"]),
     onWindowClick(e) {
       clickOutside(
         e,
@@ -111,6 +113,11 @@ export default {
         "#dropdown",
         () => (this.dropdownVisible = false)
       );
+    },
+    onLogout(e) {
+      this.$api.get("/user/logout");
+      this.logout();
+      this.$router.push({ name: "login" });
     },
   },
   mounted() {

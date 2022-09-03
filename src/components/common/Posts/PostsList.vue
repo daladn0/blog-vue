@@ -1,7 +1,7 @@
 <template>
   <div>
     <LoadingSpinner v-if="isLoading" class="w-10 h-10 mx-auto mt-8" />
-    <div class="space-y-8 mt-6 w-full max-w-3xl mx-auto pb-8" v-else>
+    <div class="space-y-8" v-else>
       <PostItem v-for="post in posts" :key="post.item" :post="post" />
     </div>
   </div>
