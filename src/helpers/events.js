@@ -10,3 +10,14 @@ export function clickOutside(event, trigger, toggle, callback) {
 
   callback();
 }
+
+export function copyText(text) {
+  const input = document.createElement("input");
+  input.value = text;
+  input.setAttribute("type", "hidden");
+  document.body.append(input);
+  input.setAttribute("type", "text");
+  input.select();
+  document.execCommand("copy");
+  input.remove();
+}

@@ -21,7 +21,7 @@
 
       <div class="relative">
         <button
-          id="post-dots"
+          :id="`post-dots-${post._id}`"
           @click="dropdownVisible = !dropdownVisible"
           class="flex items-center justify-center w-8 h-8 rounded-full transition-all hover:bg-gray-100"
           :class="{ 'bg-gray-100': dropdownVisible }"
@@ -31,10 +31,11 @@
 
         <transition name="slide-down">
           <AppDropdown
-            id="post-dropdown"
+            :id="`post-dropdown-${post._id}`"
+            class="absolute -right-2 top-full border mt-4"
             v-if="dropdownVisible"
             :items="dropItems"
-            class="absolute -right-2 top-full border mt-4"
+            @share-post="onPostShare"
           />
         </transition>
       </div>
@@ -99,8 +100,11 @@
   </div>
 </template>
 <script>
+import { mapGetters, mapActions } from "vuex";
+import { TOAST_TYPES } from "@/constants";
 import { formatDate } from "@/helpers/formats.js";
-import { clickOutside } from "@/helpers/events.js";
+import { clickOutside, copyText } from "@/helpers/events.js";
+import { getDropList } from "@/helpers";
 import AppDropdown from "@/components/common/AppDropdown.vue";
 export default {
   components: { AppDropdown },
@@ -116,21 +120,30 @@ export default {
     };
   },
   created() {
-    this.dropItems = [
-      { title: "Copy link", icon: "share", emit: "share-post" },
-      { title: "Edit post", icon: "edit", emit: "edit-post" },
-      { title: "Delete post", icon: "trash", emit: "delete-post" },
-    ];
+    this.dropItems = getDropList(this.isAuth, this.currentUser, this.post);
+  },
+  computed: {
+    ...mapGetters("user", ["isAuth", "currentUser"]),
   },
   methods: {
+    ...mapActions("toasts", ["addNew"]),
     formatDate,
     onWindowClick(e) {
       clickOutside(
         e,
-        "#post-dots",
-        "#post-dropdown",
+        `#post-dots-${this.post._id}`,
+        `#post-dropdown-${this.post._id}`,
         () => (this.dropdownVisible = false)
       );
+    },
+    onPostShare() {
+      this.dropdownVisible = false;
+      const url = `${process.env.VUE_APP_CLIENT_URL}/post/${this.post._id}`;
+      copyText(url);
+      this.addNew({
+        message: "Text is copied to clipboard",
+        type: TOAST_TYPES.SUCCESS,
+      });
     },
   },
   mounted() {

@@ -46,10 +46,11 @@
 
           <transition name="slide-down">
             <AppDropdown
+              class="absolute -right-2 top-full border mt-4"
               id="post-dropdown"
               v-if="dropdownVisible"
               :items="dropItems"
-              class="absolute -right-2 top-full border mt-4"
+              @share-post="onPostShare"
             />
           </transition>
         </div>
@@ -93,8 +94,11 @@
   </div>
 </template>
 <script>
+import { mapGetters, mapActions } from "vuex";
+import { TOAST_TYPES } from "@/constants";
 import { formatDate } from "@/helpers/formats.js";
-import { clickOutside } from "@/helpers/events.js";
+import { clickOutside, copyText } from "@/helpers/events.js";
+import { getDropList } from "@/helpers";
 import AppDropdown from "@/components/common/AppDropdown.vue";
 export default {
   name: "SinglePost",
@@ -105,17 +109,14 @@ export default {
       dropdownVisible: false,
     };
   },
-  created() {
-    this.dropItems = [
-      { title: "Copy link", icon: "share", emit: "share-post" },
-      { title: "Edit post", icon: "edit", emit: "edit-post" },
-      { title: "Delete post", icon: "trash", emit: "delete-post" },
-    ];
+  computed: {
+    ...mapGetters("user", ["isAuth", "currentUser"]),
   },
   components: {
     AppDropdown,
   },
   methods: {
+    ...mapActions("toasts", ["addNew"]),
     formatDate,
     onWindowClick(e) {
       clickOutside(
@@ -124,6 +125,15 @@ export default {
         "#post-dropdown",
         () => (this.dropdownVisible = false)
       );
+    },
+    onPostShare() {
+      this.dropdownVisible = false;
+      const url = `${process.env.VUE_APP_CLIENT_URL}/post/${this.post._id}`;
+      copyText(url);
+      this.addNew({
+        message: "Text is copied to clipboard",
+        type: TOAST_TYPES.SUCCESS,
+      });
     },
   },
   async mounted() {
@@ -143,6 +153,8 @@ export default {
     if (error) {
       console.log(errorMessage);
     }
+
+    this.dropItems = getDropList(this.isAuth, this.currentUser, this.post);
   },
   beforeUnmount() {
     window.removeEventListener("click", this.onWindowClick);

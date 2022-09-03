@@ -12,6 +12,7 @@
 
         <div class="relative w-full flex">
           <input
+            ref="input"
             v-bind="field"
             class="outline-none block p-2 w-full text-sm text-gray-800 bg-gray-50 rounded-l-lg border-r-0 border border-gray-300 hover:border-gray-400 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-l-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500"
             placeholder="Post title"
@@ -38,9 +39,9 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 import { Form, Field, configure } from "vee-validate";
 import { validateTitle } from "@/helpers/validators.js";
-import { mapActions } from "vuex";
 import { TOAST_TYPES } from "@/constants";
 
 configure({
@@ -50,6 +51,7 @@ configure({
 
 export default {
   name: "QuickPost",
+  emits: ["post-created"],
   components: {
     Form,
     Field,
@@ -62,7 +64,7 @@ export default {
   methods: {
     ...mapActions("toasts", ["addNew"]),
     validateTitle,
-    async onSubmit(model, { resetForm }) {
+    async onSubmit(model, { resetForm, setErrors }) {
       this.isLoading = true;
       const { response, error, errorMessage } = await this.$withAsync(
         this.$api.post,
@@ -71,16 +73,28 @@ export default {
       );
       this.isLoading = false;
 
-      resetForm();
-
       if (response) {
-        console.log(response.data);
+        this.$emit("post-created", response.data);
+        resetForm();
       }
 
       if (error) {
-        this.addNew({ message: errorMessage, type: TOAST_TYPES.ERROR });
+        const errors = error?.response?.data?.errors;
+
+        if (errors && errors.length) {
+          const errorsObj = {};
+
+          errors.forEach((e) => (errorsObj[e.param] = e.msg));
+
+          setErrors(errorsObj);
+        } else if (errorMessage) {
+          this.addNew({ message: errorMessage, type: TOAST_TYPES.ERROR });
+        }
       }
     },
+  },
+  mounted() {
+    this.$refs.input.focus();
   },
 };
 </script>

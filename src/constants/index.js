@@ -65,6 +65,11 @@ export const TOAST_TYPES = {
   ERROR: "ERROR",
 };
 
+export const ROLES = {
+  USER: "USER",
+  ADMIN: "ADMIN",
+};
+
 export default {
   FULLNAME_MIN_LENGTH: 3,
   FULLNAME_MAX_LENGTH: 24,
