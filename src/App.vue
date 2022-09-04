@@ -43,6 +43,7 @@ export default {
 };
 </script>
 <style lang="scss">
+@import "vue-select/dist/vue-select.css";
 @import "./styles/tailwind.scss";
 @import "./styles/app.scss";
 </style>

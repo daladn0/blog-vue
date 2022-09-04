@@ -52,6 +52,10 @@
             id="dropdown"
             class="absolute right-0 top-full mt-6"
             @logout="onLogout"
+            @post-create="
+              $router.push({ name: 'create-post' });
+              dropdownVisible = false;
+            "
           >
             <template #header>
               <div class="flex items-center max-w-full p-3">
@@ -91,7 +95,7 @@ export default {
     return {
       dropdownVisible: false,
       dropList: [
-        { title: "Dashboard", icon: "lock", emit: "dashboard" },
+        { title: "Create Post", icon: "post", emit: "post-create" },
         { title: "Settings", icon: "lock", emit: "settings" },
         { title: "Earning", icon: "lock", emit: "earning" },
         {

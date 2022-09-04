@@ -53,14 +53,28 @@ export function validateConfirmPassword(value, { form }) {
   return true;
 }
 
-export function validateTitle(value) {
+export function validatePostTitle(value) {
   if (!value) return "Title is required";
 
   if (value.length < constants.POST_TITLE_MIN_LENGTH)
     return `Title should have at least ${constants.POST_TITLE_MIN_LENGTH} chars`;
 
   if (value.length > constants.POST_TITLE_MAX_LENGTH)
-    return `Title can\`t be longer then ${constants.POST_TITLE_MAX_LENGTH} chars`;
+    return `Title can\`t be longer than ${constants.POST_TITLE_MAX_LENGTH} chars`;
+
+  return true;
+}
+
+export function validatePostBody(value) {
+  if (!value) return true;
+
+  if (value.length < constants.POST_BODY_MIN_LENGTH) {
+    return `Post body should contain at least ${constants.POST_BODY_MIN_LENGTH} chars`;
+  }
+
+  if (value.length > constants.POST_BODY_MAX_LENGTH) {
+    return `Post body can\`t be longer than ${constants.POST_BODY_MAX_LENGTH} chars`;
+  }
 
   return true;
 }

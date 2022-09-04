@@ -4,6 +4,8 @@ import withAsync from "@/helpers/withAsync";
 import { svgIconDirective } from "@/directives";
 import components from "@/components/base";
 
+import vSelect from "vue-select";
+
 export default (app) => {
   function requireAll(r) {
     r.keys().forEach(r);
@@ -28,4 +30,6 @@ export default (app) => {
   components.forEach((component) => {
     app.component(component.name, component);
   });
+
+  app.component("v-select", vSelect);
 };

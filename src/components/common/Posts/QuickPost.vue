@@ -42,7 +42,7 @@
 <script>
 import { mapActions } from "vuex";
 import { Form, Field, configure } from "vee-validate";
-import { validateTitle } from "@/helpers/validators.js";
+import { validatePostTitle } from "@/helpers/validators.js";
 import { TOAST_TYPES } from "@/constants";
 
 configure({
@@ -64,7 +64,7 @@ export default {
   },
   methods: {
     ...mapActions("toasts", ["addNew"]),
-    validateTitle,
+    validatePostTitle,
     async onSubmit(model, { resetForm, setErrors }) {
       this.isLoading = true;
       const { response, error, errorMessage } = await this.$withAsync(

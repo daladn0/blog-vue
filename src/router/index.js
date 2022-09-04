@@ -20,6 +20,15 @@ const routes = [
     },
   },
   {
+    path: "/create-post",
+    name: "create-post",
+    component: () => import("@/views/Posts/CreatePost.vue"),
+    meta: {
+      layout: "MainLayout",
+      authRequired: true,
+    },
+  },
+  {
     path: "/login",
     name: "login",
     component: LoginPage,
