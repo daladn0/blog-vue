@@ -31,11 +31,15 @@
 
         <transition name="slide-down">
           <AppDropdown
-            :id="`post-dropdown-${post._id}`"
             class="absolute -right-2 top-full border mt-4"
             v-if="dropdownVisible"
+            :id="`post-dropdown-${post._id}`"
             :items="dropItems"
             @share-post="onPostShare"
+            @delete-post="
+              $emit('deletePost', post._id);
+              dropdownVisible = false;
+            "
           />
         </transition>
       </div>
@@ -45,7 +49,7 @@
       class="group w-full aspect-ratio overflow-hidden block"
     >
       <img
-        class="w-full h-full object-cover duration-200 ease-in group-hover:scale-105"
+        class="w-full h-full object-cover duration-200 ease-in"
         src="https://www.militarytimes.com/resizer/yNKY50ee_dI8_rEbZVxM0By5jgY=/1024x0/filters:format(jpg):quality(70)/cloudfront-us-east-1.images.arcpublishing.com/archetype/WGWZBKY4HRG2DBKXSQC57HSPQY.jpg"
         alt="USMC fighter"
       />
@@ -109,6 +113,7 @@ import AppDropdown from "@/components/common/AppDropdown.vue";
 export default {
   components: { AppDropdown },
   name: "PostItem",
+  emits: ["deletePost"],
   props: {
     post: {
       type: Object,

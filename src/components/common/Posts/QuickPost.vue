@@ -3,6 +3,7 @@
     <Field name="title" v-slot="{ field, errorMessage }" :rules="validateTitle">
       <div class="flex items-center justify-between space-x-2">
         <button
+          type="button"
           class="flex-shrink-0 flex items-center justify-center w-9 h-9 rounded-full bg-slate-200"
         >
           <svg class="w-5 h-5 text-gray-500">

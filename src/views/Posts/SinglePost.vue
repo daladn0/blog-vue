@@ -1,9 +1,30 @@
 <template>
   <div class="py-6 px-5">
-    <LoadingSpinner v-if="isLoading" class="w-14 h-14 mx-auto mt-8" />
+    <Teleport to="#modal">
+      <Transition :duration="550" name="fade">
+        <AppModal
+          heading="Delete post"
+          @ok="onPostDelete"
+          @cancel="showModal = false"
+          v-if="showModal"
+        >
+          <p class="text-gray-900 p-5 text-center text-xl truncate">
+            Are you sure you want to delete "<span class="font-semibold">{{
+              post.title
+            }}</span
+            >" ?
+          </p>
+        </AppModal>
+      </Transition>
+    </Teleport>
+
+    <LoadingSpinner
+      v-if="isLoading"
+      class="w-10 md:w-14 h-10 md:h-14 mx-auto mt-8"
+    />
     <div
       class="bg-white w-12/12 md:w-10/12 lg:w-8/12 2xl:w-6/12 p-3 rounded-lg mx-auto shadow-lg"
-      v-else
+      v-else-if="post"
     >
       <!-- Heading -->
       <div class="flex items-center justify-between border-b pb-3 mb-3">
@@ -51,6 +72,10 @@
               v-if="dropdownVisible"
               :items="dropItems"
               @share-post="onPostShare"
+              @delete-post="
+                showModal = true;
+                dropdownVisible = false;
+              "
             />
           </transition>
         </div>
@@ -91,22 +116,38 @@
         </ul>
       </div>
     </div>
+    <div
+      v-else
+      class="h-[80vh] flex flex-col items-center justify-center text-gray-600"
+    >
+      <svg class="w-24 md:w-72"><use v-svg-icon="'error'" /></svg>
+      <h3 class="text-2xl md:text-5xl font-medium">{{ error }}</h3>
+      <router-link
+        :to="{ name: 'home' }"
+        class="text-blue-700 text-lg md:text-2xl mt-2 font-medium underline hover:no-underline"
+        >go home</router-link
+      >
+    </div>
   </div>
 </template>
 <script>
 import { mapGetters, mapActions } from "vuex";
+import AppDropdown from "@/components/common/AppDropdown.vue";
+import AppModal from "@/components/common/AppModal.vue";
 import { TOAST_TYPES } from "@/constants";
 import { formatDate } from "@/helpers/formats.js";
 import { clickOutside, copyText } from "@/helpers/events.js";
 import { getDropList } from "@/helpers";
-import AppDropdown from "@/components/common/AppDropdown.vue";
+
 export default {
   name: "SinglePost",
   data() {
     return {
       post: null,
+      error: null,
       isLoading: true,
       dropdownVisible: false,
+      showModal: false,
     };
   },
   computed: {
@@ -114,6 +155,7 @@ export default {
   },
   components: {
     AppDropdown,
+    AppModal,
   },
   methods: {
     ...mapActions("toasts", ["addNew"]),
@@ -135,6 +177,19 @@ export default {
         type: TOAST_TYPES.SUCCESS,
       });
     },
+    async onPostDelete() {
+      this.showModal = false;
+      this.isLoading = true;
+
+      await this.$withAsync(this.$api.delete, `/post/${this.post._id}`);
+
+      this.addNew({
+        message: "Post has been removed",
+        type: TOAST_TYPES.SUCCESS,
+      });
+
+      this.$router.push({ name: "home" });
+    },
   },
   async mounted() {
     this.isLoading = true;
@@ -151,7 +206,7 @@ export default {
     }
 
     if (error) {
-      console.log(errorMessage);
+      this.error = errorMessage;
     }
 
     this.dropItems = getDropList(this.isAuth, this.currentUser, this.post);
